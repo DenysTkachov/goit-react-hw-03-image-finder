@@ -24,8 +24,7 @@ export const fetchImages = async ({ query, page }) => {
       return null;
     }
 
-    console.log('Fetched images data:', imageData);
-
+   
     return imageData;
   } catch (error) {
     console.error('Ошибка при получении изображений:', error);

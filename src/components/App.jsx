@@ -4,7 +4,7 @@ import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
 import { Modal } from './Modal/Modal';
 import { Grid } from 'react-loader-spinner';
-import { fetchImages } from './fetchImages/fetchImages';
+import { fetchImages } from '../fetchimages';
 
 export class App extends Component {
   state = {
@@ -28,11 +28,10 @@ export class App extends Component {
   handleSubmit = newQuery => {
     this.setState(
       {
-        query: `${Date.now()}/${newQuery}`,
+        query: newQuery,
         page: 1,
         images: [],
       },
-      () => this.fetchImages()
     );
   };
 
@@ -42,7 +41,6 @@ export class App extends Component {
         prevState => ({
           page: prevState.page + 1,
         }),
-        () => this.fetchImages()
       );
     }
   };
