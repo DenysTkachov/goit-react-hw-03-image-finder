@@ -1,31 +1,42 @@
-import React, { useState } from 'react';
+import React from 'react';
 import '../../index.css';
 
-export const Searchbar = ({ onSubmit }) => {
-  const [query, setQuery] = useState('');
-
-  const handleChange = e => setQuery(e.target.value);
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    onSubmit(query);
+export class Searchbar extends React.Component {
+  state = {
+    query: '',
   };
 
-  return (
-    <form className="SearchForm" onSubmit={handleSubmit}>
-      <button className="SearchForm-button" type="submit">
-        Search
-      </button>
+  handleChange = e => this.setState({ query: e.target.value });
 
-      <input
-        className="SearchForm-input"
-        type="text"
-        autoComplete="off"
-        autoFocus
-        placeholder="Search images and photos"
-        value={query}
-        onChange={handleChange}
-      />
-    </form>
-  );
-};
+  handleSubmit = e => {
+    e.preventDefault();
+    const { query } = this.state;
+    if (query.trim() === '') {
+      alert('Can not be empty');
+      return;
+    }
+    this.props.onSubmit(query);
+  };
+
+  render() {
+    const { query } = this.state;
+
+    return (
+      <form className="SearchForm" onSubmit={this.handleSubmit}>
+        <button className="SearchForm-button" type="submit">
+          Search
+        </button>
+
+        <input
+          className="SearchForm-input"
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          value={query}
+          onChange={this.handleChange}
+        />
+      </form>
+    );
+  }
+}

@@ -14,6 +14,7 @@ export class App extends Component {
     showModal: false,
     largeImageURL: '',
     isLoading: false,
+    hasMore: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -26,22 +27,22 @@ export class App extends Component {
   }
 
   handleSubmit = newQuery => {
-    this.setState(
-      {
-        query: newQuery,
-        page: 1,
-        images: [],
-      },
-    );
+    if (newQuery.trim() === '') {
+      alert('Can not be empty');
+      return;
+    }
+    this.setState({
+      query: newQuery,
+      page: 1,
+      images: [],
+    });
   };
 
   handleLoadMore = () => {
-    if (!this.state.isLoading) {
-      this.setState(
-        prevState => ({
-          page: prevState.page + 1,
-        }),
-      );
+    if (!this.state.isLoading && this.state.hasMore) {
+      this.setState(prevState => ({
+        page: prevState.page + 1,
+      }));
     }
   };
 
@@ -60,7 +61,7 @@ export class App extends Component {
   };
 
   fetchImages = async () => {
-    const { query, page } = this.state;
+    const { query, page, images } = this.state;
     try {
       this.setState({ isLoading: true });
       const imageData = await fetchImages({
@@ -69,9 +70,13 @@ export class App extends Component {
       });
 
       if (imageData !== null) {
-        this.setState(prevState => ({
-          images: [...prevState.images, ...imageData.hits],
-        }));
+        const newImages = [...images, ...imageData.hits];
+        const hasMore = page < Math.ceil(imageData.total / 12);
+
+        this.setState({
+          images: newImages,
+          hasMore: hasMore,
+        });
       }
     } catch (error) {
       console.error('Ошибка при получении изображений:', error);
@@ -103,7 +108,8 @@ export class App extends Component {
             visible={true}
           />
         )}
-        {images.length > 0 && <Button onClick={this.handleLoadMore} />}
+
+        {this.state.hasMore && <Button onClick={this.handleLoadMore} />}
         {showModal && (
           <Modal
             largeImageURL={largeImageURL}
