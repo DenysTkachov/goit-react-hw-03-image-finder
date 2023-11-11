@@ -3,7 +3,7 @@ import { ImageGalleryItem } from '../ImageGalleryItem/ImageGalleryItem';
 import '../../index.css';
 
 
-export const ImageGallery = ({ images, onImageClick }) => (
+export const ImageGallery = ({ images, onImageClick, isLoading }) => (
   <ul className="ImageGallery">
     {images.map(image => (
       <ImageGalleryItem
@@ -12,5 +12,6 @@ export const ImageGallery = ({ images, onImageClick }) => (
         onImageClick={onImageClick}
       />
     ))}
+    {isLoading && <p>Loading...</p>}
   </ul>
 );
